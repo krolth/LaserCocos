@@ -1,9 +1,8 @@
 #ifndef __ACTOR_H__
 #define __ACTOR_H__
 
-#define SCREEN_WIDTH 465
-#define SCREEN_HEIGHT 465
-#define PI 3.1416f
+#include "Particle.h"
+#include "Constants.h"
 
 using namespace cocos2d;
 
@@ -46,9 +45,11 @@ private:
 class Ship : public Actor
 {
 	bool isDestroyed;
-
+	
 public:
-	static const int SIZE = 45;
+
+	static CCParticlePlayerTrail* Trail;
+	static CCShipExplosion* Explosion;
 
 	Ship(int width, int height, CCLayer* p) : Actor(tagShip, width, height, p)
 	{
@@ -61,9 +62,13 @@ public:
 
 		pos = newPos;
 
-		KeepInScreen(-SIZE/2);
+		KeepInScreen(-SHIP_SIZE/2);
 
-		sprite -> setPosition(pos);
+		sprite->setPosition(pos);
+
+		// This will be set by the laser
+		Ship::Trail->isEnabled = false;
+		parent->removeChild(Ship::Trail, false);
 	}
 
 	void Update() 
@@ -75,12 +80,38 @@ public:
 	{
 		if (isDestroyed) return;
 
-		//sprite = NULL; // TODO: clean up		
-		//AddParticlesRound(300, pos, 10, 10);
-		isDestroyed = true;		
-		sprite-> setPosition(ccp(0,0));
+		isDestroyed = true;
+				
+		Ship::Trail->isEnabled = false;
+		parent->removeChild(Ship::Trail, false);
+		//sprite->setPosition(ccp(0,0));
+		parent->removeChild(sprite, false);
+				
+		Ship::Explosion->setPosition(pos);
+		parent->addChild(Ship::Explosion, 10);
 
 		//StartGameOver();
+	}
+
+	void Graze(int impact, float angle)
+	{
+		if (!Ship::Trail->isEnabled)
+		{
+			parent->addChild(Ship::Trail, 10);
+			Ship::Trail->isEnabled = true;
+		}
+		Ship::Trail->setPosition(pos);
+
+		// We convert the angle from the sprite angle to a particle angle
+		// The sprite angle: Right is 90 degrees and up is 0 (clockwise). Particle angle right is 0 and up is 90 (CCW)
+		float particleAngle = 450 - angle + 180; 
+		Ship::Trail->setAngle(particleAngle);
+	}
+
+	void NoImpact()
+	{
+		Ship::Trail->isEnabled = false;
+		parent->removeChild(Ship::Trail, false);
 	}
 
 	bool IsDestroyed()
@@ -101,26 +132,26 @@ private:
 
 class Laser : public Actor
 {
-	static const int WIDTH = 10;
-
 	float angleRadians;
 	int speed, width, height;
 	CCPoint distanceVector;
 
 public:
 
-	Laser(int x, int y, float a, int s, int h, CCLayer* p) : Actor(tagLaser, WIDTH, h, p)
+	Laser(int x, int y, float a, int s, int h, CCLayer* p) : Actor(tagLaser, LASER_WIDTH, h, p)
 	{
 		angleRadians = a;
 		speed = s;
-		width = WIDTH;
+		width = LASER_WIDTH;
 		height = h;
 
 		pos.x = x;
 		pos.y = y;		
 		
 		sprite->setPosition(ccp(x,y));
-		sprite->setRotation(CC_RADIANS_TO_DEGREES(a));
+
+		float deg = CC_RADIANS_TO_DEGREES(a);
+		sprite->setRotation(deg);
 	}
 
 	bool Update(Ship* ship) 
@@ -145,20 +176,27 @@ public:
 
 		if (abs(distanceVector.y) < height/2)
 		{
+			ship->NoImpact();
+
 			float d = abs(distanceVector.x);
 			if (d<width/2)
 			{
 				ship->Destroy();
 			}
-			else if (d < width / 2 + ship->SIZE)
+			else if (d < width / 2 + SHIP_SIZE)
 			{
 				float a = PI/2;
 				if (distanceVector.x <0) a = -a;
 				a+= angleRadians;
 
-				int n = speed * (width / 2 + ship->SIZE) / d;
-				//addParticlesAngle(n/3, ship.pos , a, speed);
+				int impact = speed * (width / 2 + SHIP_SIZE) / d;
+				ship->Graze(impact/3, CC_RADIANS_TO_DEGREES(angleRadians));
+				//addParticlesAngle(impact/3, ship.pos , a, speed);
 				//score += n;
+			}
+			else
+			{
+				int i=0;
 			}
 		}
 	}

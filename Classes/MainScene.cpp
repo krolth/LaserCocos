@@ -1,6 +1,7 @@
 #include "MainScene.h"
 #include "Actor.h"
 #include "Particle.h"
+#include "Constants.h"
 
 using namespace cocos2d;
 
@@ -35,20 +36,26 @@ bool LaserGraze::init()
 		        
         CCSize windowSize = CCDirector::sharedDirector()->getWinSize();
         		
+		// Add particle system used when "grazing" laser
+		Ship::Trail = CCParticlePlayerTrail::create();
+		Ship::Trail->retain();
+		Ship::Trail->setTexture( CCTextureCache::sharedTextureCache()->addImage(s_fire1) );
+
+		// Add particle system used when exploding
+		Ship::Explosion = CCShipExplosion::create();
+		Ship::Explosion->retain();
+		Ship::Explosion->setTexture( CCTextureCache::sharedTextureCache()->addImage(s_fire1) );
+		
 		// Add the ship
 		player = new Ship(1, 1, this);
 		this->addChild(player->sprite, 0, tagShip);
 		
 		// Add one laser
-		laser = new Laser(windowSize.width/2, windowSize.height/2, 2.35f, 1, 320, this);
+		float angleRadians = CC_DEGREES_TO_RADIANS(45);
+
+		laser = new Laser(windowSize.width/2, windowSize.height/2, angleRadians, 1, 320, this);
 		this->addChild(laser->sprite, 0, tagLaser);
-
-		// Add particle system
-		m_emitter = CCParticleFireworks2::create();
-		m_emitter->retain();
-		m_emitter->setTexture( CCTextureCache::sharedTextureCache()->addImage(s_fire1) );
-		this->addChild(m_emitter, 10);
-
+		
 		this->setTouchEnabled(true);
 		this->scheduleUpdate();
 

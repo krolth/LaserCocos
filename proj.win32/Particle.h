@@ -4,21 +4,54 @@
 #include "cocos2d.h"
 using namespace cocos2d;
 
-class CCParticleFireworks2 : public CCParticleSystemQuad
+class CCParticlePlayerTrail : public CCParticleSystemQuad
 {
 public:
-    CCParticleFireworks2(){}
-    virtual ~CCParticleFireworks2(){}
+	
+	bool isEnabled;
+
+    CCParticlePlayerTrail(){ isEnabled = false; }
+    virtual ~CCParticlePlayerTrail(){}
     bool init(){ return initWithTotalParticles(150); }
+
+	void setAngle(float angle){ m_fAngle = angle; }
+
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
-    static CCParticleFireworks2 * node()
+
+	//virtual void draw();
+
+    static CCParticlePlayerTrail * node()
     {
         return create();
     }
 
-    static CCParticleFireworks2 * create()
+    static CCParticlePlayerTrail * create()
     {
-        CCParticleFireworks2 *pRet = new CCParticleFireworks2();
+        CCParticlePlayerTrail *pRet = new CCParticlePlayerTrail();
+        if (pRet->init())
+        {
+            pRet->autorelease();
+            return pRet;
+        }
+        CC_SAFE_DELETE(pRet);
+        return NULL;
+    }
+};
+
+class CCShipExplosion : public CCParticleSystemQuad
+{
+public:
+    CCShipExplosion(){}
+    virtual ~CCShipExplosion(){}
+    bool init(){ return initWithTotalParticles(700); }
+    virtual bool initWithTotalParticles(unsigned int numberOfParticles);
+    static CCShipExplosion * node()
+    {
+        return create();
+    }
+    static CCShipExplosion * create()
+    {
+        CCShipExplosion *pRet = new CCShipExplosion();
         if (pRet->init())
         {
             pRet->autorelease();
