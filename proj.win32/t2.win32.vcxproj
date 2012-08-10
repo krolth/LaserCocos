@@ -125,12 +125,14 @@
   <ItemGroup>
     <None Include="..\Resources\CloseNormal.png" />
     <None Include="..\Resources\CloseSelected.png" />
+    <None Include="..\Resources\fire.png" />
     <None Include="..\Resources\fps_images-hd.png" />
     <None Include="..\Resources\fps_images-ipadhd.png" />
     <None Include="..\Resources\fps_images.png" />
     <None Include="..\Resources\HelloWorld.png" />
     <None Include="..\Resources\laser-b.png" />
     <None Include="..\Resources\player.png" />
+    <None Include="..\Resources\stars.png" />
     <None Include="res\t2.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +150,7 @@
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\MainScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Particle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

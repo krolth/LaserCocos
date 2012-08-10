@@ -1,7 +1,8 @@
 #include "MainScene.h"
+#include "Actor.h"
+#include "Particle.h"
 
 using namespace cocos2d;
-#include "Actor.h"
 
 CCScene* LaserGraze::scene()
 {
@@ -41,6 +42,12 @@ bool LaserGraze::init()
 		// Add one laser
 		laser = new Laser(windowSize.width/2, windowSize.height/2, 2.35f, 1, 320, this);
 		this->addChild(laser->sprite, 0, tagLaser);
+
+		// Add particle system
+		m_emitter = CCParticleFireworks2::create();
+		m_emitter->retain();
+		m_emitter->setTexture( CCTextureCache::sharedTextureCache()->addImage(s_fire1) );
+		this->addChild(m_emitter, 10);
 
 		this->setTouchEnabled(true);
 		this->scheduleUpdate();

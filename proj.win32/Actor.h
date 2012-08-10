@@ -3,6 +3,7 @@
 
 #define SCREEN_WIDTH 465
 #define SCREEN_HEIGHT 465
+#define PI 3.1416f
 
 using namespace cocos2d;
 
@@ -100,8 +101,7 @@ private:
 
 class Laser : public Actor
 {
-	static const int WIDTH = 40;
-#define PI 3.1416f
+	static const int WIDTH = 10;
 
 	float angleRadians;
 	int speed, width, height;

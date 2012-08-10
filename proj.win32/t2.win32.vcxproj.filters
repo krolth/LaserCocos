@@ -42,6 +42,12 @@
     <None Include="..\Resources\laser-b.png">
       <Filter>resource</Filter>
     </None>
+    <None Include="..\Resources\stars.png">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\Resources\fire.png">
+      <Filter>resource</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="t2.rc">
@@ -76,6 +82,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\MainScene.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>

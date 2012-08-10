@@ -5,11 +5,15 @@
 #include "Actor.h"
 #include "SimpleAudioEngine.h"
 
+static const char s_stars1[] = "stars.png";
+static const char s_fire1[] = "fire.png";
+
 class LaserGraze : public cocos2d::CCLayer
 {
 private:
 	Ship* player;
 	Laser* laser;
+	CCParticleSystem* m_emitter;
 
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
