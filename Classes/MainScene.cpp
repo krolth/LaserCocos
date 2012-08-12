@@ -50,12 +50,10 @@ bool LaserGraze::init()
 		player = new Ship(1, 1, this);
 		this->addChild(player->sprite, 0, tagShip);
 		
-		// Add one laser
-		float angleRadians = CC_DEGREES_TO_RADIANS(45);
-
-		laser = new Laser(windowSize.width/2, windowSize.height/2, angleRadians, 1, 320, this);
-		this->addChild(laser->sprite, 0, tagLaser);
+		//lasers = new CCArray();
 		
+		addLaser();
+
 		this->setTouchEnabled(true);
 		this->scheduleUpdate();
 
@@ -65,10 +63,70 @@ bool LaserGraze::init()
     return bRet;
 }
 
+int nextLaserTicks = 10;
+
+void LaserGraze::addLaser()
+{
+	// Get random angle between 95 (going right) and 265 (left)
+	const int maxRand = 265;
+	const int minRand = 95;
+	const int range = maxRand - minRand;
+	
+	int angle = (rand() % range) + minRand;
+	float angleRadians = CC_DEGREES_TO_RADIANS(angle);
+
+	int rank = 1;
+	//rank += sawtoothWave(score / 10000) * 2;
+	int speed = rand() % (rank*5) + 5;
+
+	int x = rand() % SCREEN_WIDTH;
+	int y = SCREEN_HEIGHT + LASER_HEIGHT/2; // Put it slightly offscreen
+
+	int a = SCREEN_HEIGHT;
+
+	Laser* laser = new Laser(x, y, angleRadians, speed, this);
+	this->addChild(laser->sprite, 0, tagLaser);
+	lasers.push_back(laser);
+
+	nextLaserTicks = 10/rank;
+}
+
 void LaserGraze::update(float time)
 {
 	player->Update();
-	laser->Update(player);
+	player->NoImpact();
+
+	for (int i=0; i<lasers.size(); ++i)
+	{
+		lasers.at(i)->Update(player);
+	}
+
+	if (--nextLaserTicks <=0) addLaser();
+
+	//laser->Update(player);
+
+	//Laser* pObj = NULL;
+ //   CCARRAY_FOREACH(pFrames, pObj)
+ //   {
+ //       /*CCAnimationFrame* frame = (CCAnimationFrame*)pObj;
+ //       float value = (accumUnitsOfTime * newUnitOfTimeValue) / singleDuration;
+ //       accumUnitsOfTime += frame->getDelayUnits();
+ //       m_pSplitTimes->push_back(value);*/
+ //   }    
+
+	//CCARRAY_FOREACH(_lasers,objs)
+ //   {
+ //       CCSprite * laser = (CCSprite *) objs;
+ //       if (!isDestroyed) {
+ //           // Check Hit
+ //           checkHit(laser);
+ //       }
+ //       if (isFirstLaser) {
+ //       	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+ //           addMessage((char *)"GRAZE THE BEAMS", winSize.width/2, winSize.height*0.7);
+ //           isFirstLaser = false;
+ //       }
+ //   }
 }
 
 void LaserGraze::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
@@ -80,6 +138,26 @@ void LaserGraze::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
     CCPoint convertedLocation = CCDirector::sharedDirector()->convertToGL(location);
 
 	player->Move(convertedLocation);
+}
+
+void LaserGraze::ccTouchesMoved(cocos2d::CCSet* pTouches, cocos2d::CCEvent* pEvent) {
+    
+    CCSetIterator it = pTouches->begin();
+    CCTouch* touch = (CCTouch*)(*it);    
+    CCPoint location = touch->locationInView();
+    CCPoint convertedLocation = CCDirector::sharedDirector()->convertToGL(location);
+    
+    CCPoint oldTouchLocation = touch->previousLocationInView();
+    oldTouchLocation = CCDirector::sharedDirector()->convertToGL(oldTouchLocation); 
+    //oldTouchLocation = convertToNodeSpace(oldTouchLocation);
+    
+    CCPoint translation = ccpSub(location, oldTouchLocation);    
+    //movePlayer(translation);
+	player->Move(convertedLocation);
+    
+    /*    lastTouchX = location.x;
+     lastTouchY = location.y;
+     isMouseClicked = true;*/
 }
 
 void LaserGraze::menuCloseCallback(CCObject* pSender)

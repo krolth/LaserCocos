@@ -16,6 +16,14 @@ public:
 
 	void setAngle(float angle){ m_fAngle = angle; }
 
+	void killAll()
+	{
+		/*for (unsigned int i = 0; i < m_uTotalParticles; i++)
+        {
+            m_pParticles[i].timeToLive = 0;
+        }*/
+	}
+
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
 
 	//virtual void draw();

@@ -112,6 +112,8 @@ public:
 	{
 		Ship::Trail->isEnabled = false;
 		parent->removeChild(Ship::Trail, false);
+
+		Ship::Trail->killAll();
 	}
 
 	bool IsDestroyed()
@@ -138,12 +140,12 @@ class Laser : public Actor
 
 public:
 
-	Laser(int x, int y, float a, int s, int h, CCLayer* p) : Actor(tagLaser, LASER_WIDTH, h, p)
+	Laser(int x, int y, float a, int s, CCLayer* p) : Actor(tagLaser, LASER_WIDTH, LASER_HEIGHT, p)
 	{
 		angleRadians = a;
 		speed = s;
 		width = LASER_WIDTH;
-		height = h;
+		height = LASER_HEIGHT;
 
 		pos.x = x;
 		pos.y = y;		
@@ -173,10 +175,9 @@ public:
 
 		// transform to the laser point of reference :)
 		TransformDistanceVectorToLaserPoR();
-
+		
 		if (abs(distanceVector.y) < height/2)
 		{
-			ship->NoImpact();
 
 			float d = abs(distanceVector.x);
 			if (d<width/2)
@@ -193,10 +194,6 @@ public:
 				ship->Graze(impact/3, CC_RADIANS_TO_DEGREES(angleRadians));
 				//addParticlesAngle(impact/3, ship.pos , a, speed);
 				//score += n;
-			}
-			else
-			{
-				int i=0;
 			}
 		}
 	}
