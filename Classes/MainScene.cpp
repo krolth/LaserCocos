@@ -40,6 +40,7 @@ bool LaserGraze::init()
 		Ship::Trail = CCParticlePlayerTrail::create();
 		Ship::Trail->retain();
 		Ship::Trail->setTexture( CCTextureCache::sharedTextureCache()->addImage(s_fire1) );
+		this->addChild(Ship::Trail, 10);
 
 		// Add particle system used when exploding
 		Ship::Explosion = CCShipExplosion::create();

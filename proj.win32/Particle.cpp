@@ -33,7 +33,7 @@ bool CCParticlePlayerTrail::initWithTotalParticles(unsigned int numberOfParticle
         m_tPosVar = CCPointZero;
 
         // life of particles
-        m_fLife = 3;
+        m_fLife = 2;
         m_fLifeVar = 1;
 
         // size, in pixels

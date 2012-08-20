@@ -66,9 +66,8 @@ public:
 
 		sprite->setPosition(pos);
 
-		// This will be set by the laser
-		Ship::Trail->isEnabled = false;
-		parent->removeChild(Ship::Trail, false);
+		// This will be set by the laser on impact
+		NoImpact();
 	}
 
 	void Update() 
@@ -81,10 +80,9 @@ public:
 		if (isDestroyed) return;
 
 		isDestroyed = true;
-				
-		Ship::Trail->isEnabled = false;
-		parent->removeChild(Ship::Trail, false);
-		//sprite->setPosition(ccp(0,0));
+
+		NoImpact();
+		
 		parent->removeChild(sprite, false);
 				
 		Ship::Explosion->setPosition(pos);
@@ -97,8 +95,8 @@ public:
 	{
 		if (!Ship::Trail->isEnabled)
 		{
-			parent->addChild(Ship::Trail, 10);
-			Ship::Trail->isEnabled = true;
+			//parent->addChild(Ship::Trail, 10);
+			Ship::Trail->enable();
 		}
 		Ship::Trail->setPosition(pos);
 
@@ -110,8 +108,7 @@ public:
 
 	void NoImpact()
 	{
-		Ship::Trail->isEnabled = false;
-		parent->removeChild(Ship::Trail, false);
+		//parent->removeChild(Ship::Trail, false);
 
 		Ship::Trail->killAll();
 	}

@@ -16,12 +16,16 @@ public:
 
 	void setAngle(float angle){ m_fAngle = angle; }
 
+	void enable()
+	{
+		isEnabled = true;
+		m_bIsActive = true;
+	}
+
 	void killAll()
 	{
-		/*for (unsigned int i = 0; i < m_uTotalParticles; i++)
-        {
-            m_pParticles[i].timeToLive = 0;
-        }*/
+		isEnabled = false;
+		m_bIsActive = false;
 	}
 
     virtual bool initWithTotalParticles(unsigned int numberOfParticles);
